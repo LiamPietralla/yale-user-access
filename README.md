@@ -15,6 +15,10 @@ A few pre-requisites are required for this application:
 
 Yale Access is best run as a Docker container, as this reduces almost all hosting compexity. The application will need to be hosted on the internal network on your home (though the application can be exposed to the internet if you wish). 
 
+### Preparing the lock
+
+The lock will need to be paired with a ZWave.JS server, I suggest using ![ZWave.JS UI](https://github.com/zwave-js/zwave-js-ui). Once the lock is paired you will need to set a value for all the user codes you wish to use (this prevents null values being returned from the lock). To do this navigate to the lock in the ZWave.JS UI, and click the 'User Code v1' option. For each user code you are intending to use set the status to 'Available'.
+
 ### Docker
 
 A sample docker compose file is provided in the repository. This can be used to get up and running quickly. 

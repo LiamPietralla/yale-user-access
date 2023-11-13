@@ -25,7 +25,7 @@ services:
       - Devices__YaleLockNodeId=<node-id>
       - Codes__Home=<code-id>
       - Codes__GuestCodeRangeStart=<code-id>
-      - GuestCodeRangeCount=<count>
+      - Codes__GuestCodeRangeCount=<count>
       - ZWave__Url=http://<z-wave-ip>:<z-wave-port>
       - ZWave__SchemaVersion=<z-wave-schema>
       - Authentication__Password=<password>
