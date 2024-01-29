@@ -25,6 +25,13 @@ const toggleShowCode = () => {
 
 // Toggle edit mode to allow the user to edit the code
 const toggleEditMode = () => {
+    // If this code is the home code, confirm before allowing the user to edit it
+    if (props.userCode.isHome) {
+        if (!confirm("Are you sure you want to edit the home code?")) {
+            return;
+        }
+    }
+
     editMode.value = !editMode.value;
 };
 
@@ -70,7 +77,7 @@ const userCodeStatusDisplay = (status: UserCodeStatus): string => {
             <button v-if="userCode.status === UserCodeStatus.ENABLED" @click="toggleShowCode">{{ showCode ? "Hide" : "Show" }} Code</button>
             <button v-if="!editMode" @click="toggleEditMode">{{ userCode.status === UserCodeStatus.ENABLED ? "Update Code" : "Set Code" }}</button>
             <button v-if="editMode" @click="handleSubmitCode">Submit Code</button>
-            <button v-if="userCode.status === UserCodeStatus.ENABLED" @click="handleClearCode">Clear Code</button>
+            <button v-if="userCode.status === UserCodeStatus.ENABLED" :disabled="userCode.isHome" @click="handleClearCode">Clear Code</button>
         </td>
     </tr>
 </template>
