@@ -3,7 +3,7 @@ import type { ApiResponse } from '@/types/api-response';
 import UserCodeListRow from './UserCodeListRow.vue';
 
 import { onMounted, ref } from 'vue';
-import type { YaleUserCode } from '@/types/yale';
+import { UserCodeStatus, type YaleUserCode } from '@/types/yale';
 
 const userCodes = ref([] as YaleUserCode[]);
 const loading = ref(true);
@@ -45,8 +45,10 @@ const handleUpdateCode = async (body: { id: number, code: string }) => {
     const apiResponse = await response.json() as ApiResponse<boolean>;
 
     if (apiResponse.success) {
-        // If the response was successful, refresh the user codes
-        await loadUserCodes();
+        // If the response was successful update the code in the list
+        const index = userCodes.value.findIndex(x => x.id === body.id);
+        userCodes.value[index].code = body.code;
+        userCodes.value[index].status = UserCodeStatus.ENABLED;
     } else {
         // Otherwise display an error to the user.
         alert(apiResponse.error ?? 'Unknown error');
@@ -70,8 +72,10 @@ const handleClearCode = async (id: number) => {
     const apiResponse = await response.json() as ApiResponse<boolean>;
 
     if (apiResponse.success) {
-        // If the response was successful, refresh the user codes
-        await loadUserCodes();
+        // If the response was successful set the code to available in the list
+        const index = userCodes.value.findIndex(x => x.id === id);
+        userCodes.value[index].code = '';
+        userCodes.value[index].status = UserCodeStatus.AVAILABLE;
     } else {
         // Otherwise display an error to the user.
         alert(apiResponse.error ?? 'Unknown error');
