@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 using Serilog.Events;
 using YaleAccess.Models.Options;
+using YaleAccess.Services;
+using YaleAccess.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +39,19 @@ try
                 .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Error)
                 .WriteTo.File(logLocation, rollingInterval: RollingInterval.Day)
                 .CreateLogger();
+
+    // Configure the DI services
+    // If the environment is development and the mock option is set to true, use the mock service
+    if (builder.Environment.IsDevelopment() && configuration.GetValue<bool>("UseMockDevelopmentMode"))
+    {
+        builder.Services.AddSingleton<MockYaleData>();
+        builder.Services.AddScoped<IYaleAccessor, MockYaleAccessor>();
+    }
+    else
+    {
+        builder.Services.AddScoped<IYaleAccessor, YaleAccessor>();
+    }
+    
 
     // Setup CORS
     string[] corsAllowedOrigins = (configuration["CorsAllowedOrigins"] ?? "http://localhost:3000").Split(",") ;

@@ -1,11 +1,15 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Linq;
 using Serilog;
+using YaleAccess.Models;
 using YaleAccess.Models.Options;
+using YaleAccess.Services.Interfaces;
 using ZWaveJS.NET;
+using ZWaveOptions = YaleAccess.Models.Options.ZWaveOptions;
 
-namespace YaleAccess.Models
+namespace YaleAccess.Services
 {
-    public class YaleAccessor : IDisposable
+    public class YaleAccessor : IYaleAccessor, IDisposable
     {
         #region Dispose Logic
 
@@ -37,8 +41,12 @@ namespace YaleAccess.Models
         private Driver? driver = null;
         private readonly ZWaveNode lockNode = null!;
 
-        public YaleAccessor(Options.ZWaveOptions zwaveOptions, DevicesOptions devicesOptions)
+        public YaleAccessor(IOptions<ZWaveOptions> zwave, IOptions<DevicesOptions> device)
         {
+            // Retrive options from configuration
+            ZWaveOptions zwaveOptions = zwave.Value;
+            DevicesOptions devicesOptions = device.Value;
+
             // Create a new driver instance
             driver = new Driver(new Uri(zwaveOptions.Url), zwaveOptions.SchemaVersion);
 
@@ -54,7 +62,7 @@ namespace YaleAccess.Models
                 isReady = true;
             };
 
-            driver.StartUpError += (string message) =>
+            driver.StartUpError += (message) =>
             {
                 throw new Exception(message);
             };

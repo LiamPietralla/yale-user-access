@@ -5,6 +5,8 @@ using Microsoft.Extensions.Options;
 using Serilog;
 using YaleAccess.Models;
 using YaleAccess.Models.Options;
+using YaleAccess.Services;
+using YaleAccess.Services.Interfaces;
 
 namespace YaleAccess.Controllers
 {
@@ -14,14 +16,12 @@ namespace YaleAccess.Controllers
     [Authorize]
     public class YaleController : ControllerBase
     {
-        private readonly ZWaveOptions _zWaveOptions;
-        private readonly DevicesOptions _devicesOptions;
+        private readonly IYaleAccessor _yaleAccessor;
         private readonly CodesOptions _codeOptions;
 
-        public YaleController(IOptions<ZWaveOptions> zwave, IOptions<DevicesOptions> device, IOptions<CodesOptions> codeOptions)
+        public YaleController(IYaleAccessor yaleAccessor, IOptions<CodesOptions> codeOptions)
         {
-            _zWaveOptions = zwave.Value;
-            _devicesOptions = device.Value;
+            _yaleAccessor = yaleAccessor;
             _codeOptions = codeOptions.Value;
         }
 
@@ -30,18 +30,15 @@ namespace YaleAccess.Controllers
         {
             try
             {
-                // Create the yale accessor to interact with the lock
-                using YaleAccessor yaleAccessor = new(_zWaveOptions, _devicesOptions);
-
                 // Get the home code first
-                YaleUserCode homeCode = await yaleAccessor.GetCodeInformationAsync(_codeOptions.Home);
+                YaleUserCode homeCode = await _yaleAccessor.GetCodeInformationAsync(_codeOptions.Home);
                 homeCode.IsHome = true;
 
                 // Get the guest codes
                 List<YaleUserCode> guestCodes = new();
                 foreach (int code in Enumerable.Range(_codeOptions.GuestCodeRangeStart, _codeOptions.GuestCodeRangeCount))
                 {
-                    guestCodes.Add(await yaleAccessor.GetCodeInformationAsync(code));
+                    guestCodes.Add(await _yaleAccessor.GetCodeInformationAsync(code));
                 }
 
                 // Add the home code to the list
@@ -69,11 +66,8 @@ namespace YaleAccess.Controllers
                     return BadRequest(new ApiResponse(validCode));
                 }
 
-                // Create the yale accessor to interact with the lock
-                using YaleAccessor yaleAccessor = new(_zWaveOptions, _devicesOptions);
-
                 // Set the new code
-                bool result = await yaleAccessor.SetUserCode(id, newCode);
+                bool result = await _yaleAccessor.SetUserCode(id, newCode);
 
                 // Return the result
                 if (result)
@@ -99,11 +93,8 @@ namespace YaleAccess.Controllers
         {
             try
             {
-                // Create the yale accessor to interact with the lock
-                using YaleAccessor yaleAccessor = new(_zWaveOptions, _devicesOptions);
-
                 // Set the available status
-                bool result = await yaleAccessor.SetCodeAsAvailable(id);
+                bool result = await _yaleAccessor.SetCodeAsAvailable(id);
 
                 // Return the result
                 if (result)
