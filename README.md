@@ -57,4 +57,6 @@ The backend is built using .NET 7. To get started ensure you have the .NET 7 SDK
 
 To start the backend, run `dotnet run` from the `YaleAccess.Api` directory (or use the Visual Studio debugger).
 
-Note: you will need the ZWave.JS server running and configured to use the same scheme version as the backend for development.
+Note: you will need the ZWave.JS server running and configured to use the same scheme version as the backend for development unsless you are using the mock mode.
+
+To enable the mock mode for development, set the `UseMockDevelopmentMode` flag to true in the `appsettings.Development.json` file. This will repalce teh ZWave.JS server with a mock implementation, which will allow you to test the application without a ZWave.JS server. This is handy for doing UI changes without having to have the lock available.
