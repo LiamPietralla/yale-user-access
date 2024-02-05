@@ -36,9 +36,27 @@ const handleLogin = async () => {
 </script>
 
 <template>
-    <h1>Login</h1>
+    <div class="bg-zinc-800 text-slate-300 text-center w-full md:w-96 rounded-md">
+        <h1 class="text-7xl mt-5">Yale</h1>
+        <div>
+            <h4 class="hr text-2xl mt-3">User Access</h4>
+        </div>
 
-    <input type="password" v-model="password" placeholder="Password">
-    <p v-if="passwordError">{{ passwordError }}</p>
-    <button @click='handleLogin'>Login</button>
+        <input class="block mt-20 w-5/6 mx-auto bg-zinc-900 hover:bg-zinc-700 p-2 rounded-md" type="password" v-model="password" placeholder="Password">
+        <p class="mt-3 w-5/6 mx-auto text-red-600" v-if="passwordError">{{ passwordError }}</p>
+        <button class="mb-5 mt-3 w-5/6 mx-auto bg-stone-950 hover:bg-stone-900 p-2 rounded-md" @click='handleLogin'>Login</button>
+    </div>
 </template>
+
+<style>
+.hr {
+    display: inline-block;
+}
+
+.hr::after {
+    content: '';
+    display: block;
+    border-top: 2px solid theme('colors.slate.300');
+    margin-top: .1rem;
+}
+</style>
