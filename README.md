@@ -43,6 +43,12 @@ The appropriate environment variables will need to be set in the docker compose 
 
 Once the environment variables have been set, the application can be started by running `docker-compose up -d` from the root of the compose file. To allow the application to be accessed from the internet, you will need to expose the application to the internet, the recommended setup would be a Nginx reverse proxy.
 
+## Screenshots
+
+### Login
+
+<img src="./screenshots/login.png" alt="Login" width="300"/>
+
 ## Development
 
 ### Frontend
