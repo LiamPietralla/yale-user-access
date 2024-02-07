@@ -11,7 +11,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
     (e: "update-code", body: { id: number, code: string }): void
-    (e: "clear-code", id: number): void 
+    (e: "clear-code", id: number): void
 }>();
 
 const showCode = ref(false);
@@ -67,17 +67,26 @@ const userCodeStatusDisplay = (status: UserCodeStatus): string => {
 </script>
 
 <template>
-    <tr>
-        <td>{{ userCode.id }}</td>
-        <td v-if="userCode.status === UserCodeStatus.ENABLED && !editMode">{{ showCode ? userCode.code : "***" }}</td>
-        <td v-if="editMode"><input type="text" v-model="newCode" /></td>
-        <td>{{ userCodeStatusDisplay(userCode.status) }}</td>
-        <td>{{ userCode.isHome }}</td>
+    <tr scope="row">
         <td>
-            <button v-if="userCode.status === UserCodeStatus.ENABLED" @click="toggleShowCode">{{ showCode ? "Hide" : "Show" }} Code</button>
-            <button v-if="!editMode" @click="toggleEditMode">{{ userCode.status === UserCodeStatus.ENABLED ? "Update Code" : "Set Code" }}</button>
-            <button v-if="editMode" @click="handleSubmitCode">Submit Code</button>
-            <button v-if="userCode.status === UserCodeStatus.ENABLED" :disabled="userCode.isHome" @click="handleClearCode">Clear Code</button>
+            <template v-if="userCode.isHome">
+                {{ userCode.id }} (<IconHome />)
+            </template>
+            <template v-else>
+                {{ userCode.id }}
+            </template>
+        </td>
+        <td>{{ userCodeStatusDisplay(userCode.status) }}</td>
+        <td class="flex">
+            <YaleButton>
+                <IconEye />
+            </YaleButton>
+            <YaleButton class="ml-2">
+                <IconPencil />
+            </YaleButton>
+            <YaleButton class="ml-2">
+                <IconTrash />
+            </YaleButton>
         </td>
     </tr>
 </template>

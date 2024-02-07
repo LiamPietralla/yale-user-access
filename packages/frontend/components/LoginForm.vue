@@ -48,7 +48,7 @@ const handleLogin = async (event: Event) => {
         <form @submit="handleLogin">
             <YaleFormInput type="password" v-model="password" placeholder="Password" class="block mt-10 w-5/6 mx-auto" />
             <p class="mt-3 w-5/6 mx-auto text-red-600" v-if="passwordError">{{ passwordError }}</p>
-            <YaleButton text="Login" type="submit" class="mb-8 mt-3 w-5/6 mx-auto " />
+            <YaleButton type="submit" class="mb-8 mt-3 w-5/6 mx-auto ">Login</YaleButton>
         </form>
     </div>
 </template>

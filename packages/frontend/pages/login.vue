@@ -1,8 +1,6 @@
 <script setup lang="ts">
-useHead({
-    bodyAttrs: {
-        class: 'bg-black'
-    }
+definePageMeta({
+  layout: 'blank'
 })
 </script>
 

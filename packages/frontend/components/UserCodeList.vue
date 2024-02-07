@@ -87,17 +87,13 @@ const handleClearCode = async (id: number) => {
 </script>
 
 <template>
-    <h1>Yale User Code List</h1>
-    <hr />
     <!-- Handle loading state -->
     <div v-if="loading">Loading...</div>
-    <table v-else>
+    <table v-else class="w-full text-left">
         <tr>
-            <th>Code ID</th>
-            <th>Code</th>
-            <th>Status</th>
-            <th>Is Home?</th>
-            <th>Actions</th>
+            <th scope="col">Code ID</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
         </tr>
         <UserCodeListRow v-for="userCode in userCodes" :key="userCode.id" :user-code="userCode"
             @update-code="handleUpdateCode" @clear-code="handleClearCode" />
