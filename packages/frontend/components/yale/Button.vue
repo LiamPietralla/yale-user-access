@@ -3,7 +3,6 @@ import type { HTMLButtonTypes } from '~/types/html-input-types';
 
 interface ButtonProps {
     type: HTMLButtonTypes | undefined
-    class?: string
 }
 
 const props = withDefaults(defineProps<ButtonProps>(), {
@@ -20,7 +19,7 @@ const handleClick = () => {
 </script>
 
 <template>
-    <button :type="props.type" :class="`bg-stone-950 hover:bg-stone-900 p-2 rounded-md ${props.class}`"
+    <button :type="props.type" class="bg-stone-950 hover:bg-stone-900 p-2 rounded-md"
         @click="handleClick">
         <slot></slot>
     </button>

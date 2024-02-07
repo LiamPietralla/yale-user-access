@@ -21,6 +21,6 @@ const handleInput = (event: Event) => {
 </script>
 
 <template>
-    <input :class="`bg-zinc-900 p-2 rounded-md ${props.class}`" :type="props.type"
+    <input class="bg-zinc-900 p-2 rounded-md" :type="props.type"
         :value="props.modelValue" :placeholder="props.placeholder" @input="handleInput">
 </template>~/types/html-input-types

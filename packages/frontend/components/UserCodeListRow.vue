@@ -10,6 +10,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits<{
+    (e: "show-code", id: number): void
     (e: "update-code", body: { id: number, code: string }): void
     (e: "clear-code", id: number): void
 }>();
@@ -34,6 +35,11 @@ const toggleEditMode = () => {
 
     editMode.value = !editMode.value;
 };
+
+const handleShowCodeClick = () => {
+    // Emit the event to the parent component to handle
+    emit("show-code", props.userCode.id);
+}
 
 // Handle the submit code button click
 const handleSubmitCode = () => {
@@ -78,13 +84,13 @@ const userCodeStatusDisplay = (status: UserCodeStatus): string => {
         </td>
         <td>{{ userCodeStatusDisplay(userCode.status) }}</td>
         <td class="flex">
-            <YaleButton>
-                <IconEye />
+            <YaleButton type="button">
+                <IconEye @click="handleShowCodeClick" />
             </YaleButton>
-            <YaleButton class="ml-2">
+            <YaleButton type="button" class="ml-2">
                 <IconPencil />
             </YaleButton>
-            <YaleButton class="ml-2">
+            <YaleButton type="button" class="ml-2">
                 <IconTrash />
             </YaleButton>
         </td>

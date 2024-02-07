@@ -1,13 +1,18 @@
 <script setup lang='ts'>
 import type { ApiResponse } from '@/types/api-response';
 import UserCodeListRow from './UserCodeListRow.vue';
-
 import { onMounted, ref } from 'vue';
 import { UserCodeStatus, type YaleUserCode } from '@/types/yale';
 
 const userCodes = ref([] as YaleUserCode[]);
+const userCode = ref({} as YaleUserCode);
 const loading = ref(true);
 const runtimeConfig = useRuntimeConfig();
+
+// Modals
+const showModal = ref(false);
+const editModal = ref(false);
+const clearModal = ref(false);
 
 // When the component is mounted, load the user codes
 onMounted(async () => {
@@ -84,6 +89,23 @@ const handleClearCode = async (id: number) => {
     // Set the loading status
     loading.value = false;
 } 
+
+const handleShowCode = (id: number) => {
+    // Set the user code to show
+    const code = userCodes.value.find(x => x.id === id);
+
+    // If the code is not found then show an error to the user
+    if (!code) {
+        alert('Code not found');
+        return;
+    }
+
+    // Set the user code to show
+    userCode.value = code;
+
+    // Show the show-modal
+    showModal.value = true;
+}
 </script>
 
 <template>
@@ -96,6 +118,42 @@ const handleClearCode = async (id: number) => {
             <th scope="col">Actions</th>
         </tr>
         <UserCodeListRow v-for="userCode in userCodes" :key="userCode.id" :user-code="userCode"
-            @update-code="handleUpdateCode" @clear-code="handleClearCode" />
+            @update-code="handleUpdateCode" @clear-code="handleClearCode" @show-code="handleShowCode" />
     </table>
+
+    <!-- Show modal -->
+    <Modal v-if="showModal" @close="showModal = false">
+        <template #title>
+            User Code # {{ userCode.id }}
+        </template>
+        <template #default>
+            Code: {{ userCode.code }}
+        </template>
+    </Modal>
+
+    <!-- Edit modal -->
+    <Modal v-if="editModal" @close="editModal = false">
+        <template #title>
+            Edit User Code # {{ userCode.id }}
+        </template>
+        <template #default>
+            TODO
+        </template>
+        <template #footer>
+            TODO
+        </template>
+    </Modal>
+
+    <!-- Clear modal -->
+    <Modal v-if="clearModal" @close="clearModal = false">
+        <template #title>
+            Delete User Code # {{ userCode.id }}
+        </template>
+        <template #default>
+            TODO
+        </template>
+        <template #footer>
+            TODO
+        </template>
+    </Modal>
 </template>
