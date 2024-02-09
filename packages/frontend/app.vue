@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import '~/assets/styles/main.scss'
+useHead({
+  bodyAttrs: {
+    class: 'bg-black'
+  }
+})
 </script>
 
 <template>
-  <div>
+  <NuxtLayout>
     <NuxtPage />
-  </div>
+  </NuxtLayout>
 </template>

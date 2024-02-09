@@ -19,6 +19,8 @@ onMounted(async () => {
 </script>
 
 <template>
+    <div class="text-slate-300">
     <h1>Health Check</h1>
     <p>{{ healthResult }}</p>
+</div>
 </template>

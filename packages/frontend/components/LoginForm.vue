@@ -7,7 +7,10 @@ const passwordError = ref('');
 const authenticated = useCookie<boolean>('authenticated');
 const runtimeConfig = useRuntimeConfig();
 
-const handleLogin = async () => {
+const handleLogin = async (event: Event) => {
+    // Prevent default form submission
+    event.preventDefault();
+    
     // Reset the error
     passwordError.value = '';
 
@@ -36,9 +39,29 @@ const handleLogin = async () => {
 </script>
 
 <template>
-    <h1>Login</h1>
+    <div class="bg-zinc-800 text-slate-300 text-center w-full md:w-96 rounded-md">
+        <h1 class="text-7xl mt-5">Yale</h1>
+        <div>
+            <h4 class="hr text-2xl mt-3">User Access</h4>
+        </div>
 
-    <input type="password" v-model="password" placeholder="Password">
-    <p v-if="passwordError">{{ passwordError }}</p>
-    <button @click='handleLogin'>Login</button>
+        <form @submit="handleLogin">
+            <YaleFormInput type="password" v-model="password" placeholder="Password" class="block mt-10 w-5/6 mx-auto" />
+            <p class="mt-3 w-5/6 mx-auto text-red-600" v-if="passwordError">{{ passwordError }}</p>
+            <YaleButton type="submit" class="mb-8 mt-3 w-5/6 mx-auto ">Login</YaleButton>
+        </form>
+    </div>
 </template>
+
+<style>
+.hr {
+    display: inline-block;
+}
+
+.hr::after {
+    content: '';
+    display: block;
+    border-top: 2px solid theme('colors.slate.300');
+    margin-top: .1rem;
+}
+</style>

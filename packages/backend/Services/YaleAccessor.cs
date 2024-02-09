@@ -180,5 +180,16 @@ namespace YaleAccess.Services
             // Otherwise, the code is valid, return an empty string
             return string.Empty;
         }
+
+        public static string ValidateClearCode(int codeId, int homeCodeId)
+        {
+            // If the code is the home code, return an error message
+            if (codeId == homeCodeId)
+            {
+                return "The home code cannot be cleared.";
+            }
+
+            return string.Empty;
+        }
     }
 }

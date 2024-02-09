@@ -93,6 +93,13 @@ namespace YaleAccess.Controllers
         {
             try
             {
+                // First validate the user code
+                string validCode = YaleAccessor.ValidateClearCode(id, _codeOptions.Home);
+                if (validCode != string.Empty)
+                {
+                    return BadRequest(new ApiResponse(validCode));
+                }
+
                 // Set the available status
                 bool result = await _yaleAccessor.SetCodeAsAvailable(id);
 
