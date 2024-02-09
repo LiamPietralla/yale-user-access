@@ -49,6 +49,18 @@ Once the environment variables have been set, the application can be started by 
 
 <img src="./screenshots/login.png" alt="Login" width="300"/>
 
+### Home Screen
+
+<img src="./screenshots/home.png" alt="Home" width="300"/>
+
+### Edit Code
+
+<img src="./screenshots/edit.png" alt="Edit Code" width="300"/>
+
+### Delete Code
+
+<img src="./screenshots/delete.png" alt="Delete Code" width="300"/>
+
 ## Development
 
 ### Frontend
