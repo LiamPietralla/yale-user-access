@@ -3,7 +3,6 @@ import type { HTMLInputTypes } from '~/types/html-input-types';
 
 const props = defineProps<{
     type: HTMLInputTypes
-    class: string | undefined
     placeholder: string
     modelValue: string
 }>();

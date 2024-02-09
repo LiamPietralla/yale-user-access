@@ -11,7 +11,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
     (e: "show-code", id: number): void
-    (e: "update-code", body: { id: number, code: string }): void
+    (e: "update-code", id: number): void
     (e: "clear-code", id: number): void
 }>();
 
@@ -41,19 +41,14 @@ const handleShowCodeClick = () => {
     emit("show-code", props.userCode.id);
 }
 
-// Handle the submit code button click
-const handleSubmitCode = () => {
-    const body = {
-        id: props.userCode.id,
-        code: newCode.value,
-    };
-
+// Handle the update code button click
+const handleUpdateCodeClick = () => {
     // Emit the event to the parent component
-    emit("update-code", body);
+    emit("update-code", props.userCode.id);
 }
 
 // Handle the clear code button click
-const handleClearCode = () => {
+const handleClearCodeClick = () => {
     // Emit the event to the parent component
     emit("clear-code", props.userCode.id);
 }
@@ -84,13 +79,13 @@ const userCodeStatusDisplay = (status: UserCodeStatus): string => {
         </td>
         <td>{{ userCodeStatusDisplay(userCode.status) }}</td>
         <td class="flex">
-            <YaleButton type="button">
-                <IconEye @click="handleShowCodeClick" />
+            <YaleButton type="button" @click="handleShowCodeClick">
+                <IconEye />
             </YaleButton>
-            <YaleButton type="button" class="ml-2">
+            <YaleButton type="button" class="ml-2" @click="handleUpdateCodeClick">
                 <IconPencil />
             </YaleButton>
-            <YaleButton type="button" class="ml-2">
+            <YaleButton type="button" class="ml-2" @click="handleClearCodeClick">
                 <IconTrash />
             </YaleButton>
         </td>

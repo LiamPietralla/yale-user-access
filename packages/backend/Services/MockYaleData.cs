@@ -24,7 +24,7 @@ namespace YaleAccess.Services
                 guestCodes.Add(new YaleUserCode()
                 {
                     Id = code,
-                    Code = "1234",
+                    Code = "",
                     IsHome = false,
                     Status = UserCodeStatus.AVAILABLE
                 });
@@ -49,6 +49,9 @@ namespace YaleAccess.Services
 
             // Set the code
             userCode.Code = code;
+
+            // Update code status
+            userCode.Status = UserCodeStatus.ENABLED;
 
             // Update the user code in the list
             UserCodes[UserCodes.IndexOf(userCode)] = userCode;

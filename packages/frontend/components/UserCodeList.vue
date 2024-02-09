@@ -14,6 +14,10 @@ const showModal = ref(false);
 const editModal = ref(false);
 const clearModal = ref(false);
 
+// Form Fields
+const newCode = ref('');
+const newCodeError = ref('');
+
 // When the component is mounted, load the user codes
 onMounted(async () => {
     // Load the user codes and set the loading status when complete
@@ -32,18 +36,27 @@ const loadUserCodes = async () => {
     userCodes.value = apiResponse.data?.sort((a, b) => a.id - b.id) || [];
 }
 
-const handleUpdateCode = async (body: { id: number, code: string }) => {
+const confirmUpdateCode = async (id: number, code: string) => {
+    // Reset the error
+    newCodeError.value = '';
+
+    // Validate the new code first
+    if (!/^\d{4,6}$/.test(code)) {
+        newCodeError.value = 'Code must be 4, 5 or 6 digits long';
+        return;
+    }
+    
     // Set the loading status
     loading.value = true;
 
     // Send a request to the api, the body will just be the new code
-    const response = await fetch(`${runtimeConfig.public.apiBaseUrl}/api/Yale/code/${body.id}`, {
+    const response = await fetch(`${runtimeConfig.public.apiBaseUrl}/api/Yale/code/${id}`, {
         method: 'POST',
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: `"${body.code}"`
+        body: `"${code}"`
     });
 
     // Parse the result
@@ -51,19 +64,25 @@ const handleUpdateCode = async (body: { id: number, code: string }) => {
 
     if (apiResponse.success) {
         // If the response was successful update the code in the list
-        const index = userCodes.value.findIndex(x => x.id === body.id);
-        userCodes.value[index].code = body.code;
+        const index = userCodes.value.findIndex(x => x.id === id);
+        userCodes.value[index].code = code;
         userCodes.value[index].status = UserCodeStatus.ENABLED;
     } else {
         // Otherwise display an error to the user.
         alert(apiResponse.error ?? 'Unknown error');
     }
 
+    // Reset the new code
+    newCode.value = '';
+
+    // Close the edit modal
+    editModal.value = false;
+
     // Set the loading status
     loading.value = false;
 }
 
-const handleClearCode = async (id: number) => {
+const confirmClearCode = async (id: number) => {
     // Set the loading status
     loading.value = true;
 
@@ -86,12 +105,15 @@ const handleClearCode = async (id: number) => {
         alert(apiResponse.error ?? 'Unknown error');
     }
 
+    // Close the clear modal
+    clearModal.value = false;
+
     // Set the loading status
     loading.value = false;
 } 
 
 const handleShowCode = (id: number) => {
-    // Set the user code to show
+    // Get the user code to show
     const code = userCodes.value.find(x => x.id === id);
 
     // If the code is not found then show an error to the user
@@ -105,6 +127,40 @@ const handleShowCode = (id: number) => {
 
     // Show the show-modal
     showModal.value = true;
+}
+
+const handleUpdateCode = (id: number) => {
+    // Get the user code to update
+    const code = userCodes.value.find(x => x.id === id);
+
+    // If the code is not found then show an error to the user
+    if (!code) {
+        alert('Code not found');
+        return;
+    }
+
+    // Set the user code to update
+    userCode.value = code;
+
+    // Show the edit-modal
+    editModal.value = true;
+}
+
+const handleClearCode = (id: number) => {
+    // Get the user code to clear
+    const code = userCodes.value.find(x => x.id === id);
+
+    // If the code is not found then show an error to the user
+    if (!code) {
+        alert('Code not found');
+        return;
+    }
+
+    // Set the user code to clear
+    userCode.value = code;
+
+    // Show the clear-modal
+    clearModal.value = true;
 }
 </script>
 
@@ -137,10 +193,9 @@ const handleShowCode = (id: number) => {
             Edit User Code # {{ userCode.id }}
         </template>
         <template #default>
-            TODO
-        </template>
-        <template #footer>
-            TODO
+            <YaleFormInput v-model="newCode" type="text" placeholder="New Code" class="block w-full" />
+            <p class="text-red-600 mt-3" v-if="newCodeError">{{ newCodeError }}</p>
+            <YaleButton @click="confirmUpdateCode(userCode.id, newCode)" class="w-full mt-3">Update Code</YaleButton>
         </template>
     </Modal>
 
@@ -150,10 +205,8 @@ const handleShowCode = (id: number) => {
             Delete User Code # {{ userCode.id }}
         </template>
         <template #default>
-            TODO
-        </template>
-        <template #footer>
-            TODO
+            <p>Are you sure you want to delete this code?</p>
+            <YaleButton @click="confirmClearCode(userCode.id)" class="w-full mt-3">Delete Code</YaleButton>
         </template>
     </Modal>
 </template>
