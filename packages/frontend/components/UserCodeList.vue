@@ -162,6 +162,10 @@ const handleClearCode = (id: number) => {
     // Show the clear-modal
     clearModal.value = true;
 }
+
+const test = () => {
+    alert('Test');
+}
 </script>
 
 <template>
@@ -196,6 +200,9 @@ const handleClearCode = (id: number) => {
             <YaleFormInput v-model="newCode" type="text" placeholder="New Code" class="block w-full" />
             <p class="text-red-600 mt-3" v-if="newCodeError">{{ newCodeError }}</p>
             <YaleButton @click="confirmUpdateCode(userCode.id, newCode)" class="w-full mt-3">Update Code</YaleButton>
+        </template>
+        <template #footer v-if="userCode.isHome">
+            <p class="text-red-600 mt-3">You are about to edit the home code, are you sure?</p>
         </template>
     </Modal>
 

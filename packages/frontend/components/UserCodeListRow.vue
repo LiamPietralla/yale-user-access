@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { UserCodeStatus, type YaleUserCode } from '~/types/yale';
-import { ref, type PropType } from 'vue';
+import { type PropType } from 'vue';
 
 const props = defineProps({
     userCode: {
@@ -14,27 +14,6 @@ const emit = defineEmits<{
     (e: "update-code", id: number): void
     (e: "clear-code", id: number): void
 }>();
-
-const showCode = ref(false);
-const editMode = ref(false);
-const newCode = ref("");
-
-// Toggle the show code bool to show or hide the code in the UI
-const toggleShowCode = () => {
-    showCode.value = !showCode.value;
-};
-
-// Toggle edit mode to allow the user to edit the code
-const toggleEditMode = () => {
-    // If this code is the home code, confirm before allowing the user to edit it
-    if (props.userCode.isHome) {
-        if (!confirm("Are you sure you want to edit the home code?")) {
-            return;
-        }
-    }
-
-    editMode.value = !editMode.value;
-};
 
 const handleShowCodeClick = () => {
     // Emit the event to the parent component to handle
@@ -79,13 +58,13 @@ const userCodeStatusDisplay = (status: UserCodeStatus): string => {
         </td>
         <td>{{ userCodeStatusDisplay(userCode.status) }}</td>
         <td class="flex">
-            <YaleButton type="button" @click="handleShowCodeClick">
+            <YaleButton type="button" @click="handleShowCodeClick" :disabled="props.userCode.status !== UserCodeStatus.ENABLED">
                 <IconEye />
             </YaleButton>
             <YaleButton type="button" class="ml-2" @click="handleUpdateCodeClick">
                 <IconPencil />
             </YaleButton>
-            <YaleButton type="button" class="ml-2" @click="handleClearCodeClick">
+            <YaleButton type="button" class="ml-2" @click="handleClearCodeClick" :disabled="props.userCode.status !== UserCodeStatus.ENABLED" v-if="!props.userCode.isHome">
                 <IconTrash />
             </YaleButton>
         </td>
